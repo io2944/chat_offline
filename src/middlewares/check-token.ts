@@ -22,3 +22,22 @@ export const checkToken = (
   req.currentUser = jwtResponse;
   next();
 };
+
+export const wsAuthMiddleware = (
+  ws: WebSocket,
+  req: AuthenticatedRequest,
+  next: (err?: any) => void
+) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    ws.close(1008, "Unauthorized"); // policy violation
+    return;
+  }
+  const jwtResponse = verifyToken(token);
+  if (jwtResponse instanceof jwt.JsonWebTokenError) {
+    return ws.close(1008, "Invalid token");
+  }
+  req.currentUser = jwtResponse;
+  next();
+};
