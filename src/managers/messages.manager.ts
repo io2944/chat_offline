@@ -17,3 +17,16 @@ export function findAllById(conversationId: number) {
     )
     .all({ conversationId }) as Message[] | undefined;
 }
+
+export function createMessage({
+  authorId,
+  conversationId,
+  content,
+  createdAt,
+}: Omit<Message, "id">): void {
+  db.prepare(
+    `
+      INSERT INTO messages (author_id, conversation_id, content, created_at) VALUES (?, ?, ?, ?)
+    `
+  ).run(authorId, conversationId, content, createdAt);
+}
