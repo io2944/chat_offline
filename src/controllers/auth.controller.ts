@@ -4,8 +4,6 @@ import jwt from "jsonwebtoken";
 import { createUser, findUserByUsername } from "../managers/users.manager.js";
 
 const authRouter = Router();
-const users: { id: number; username: string; password: string }[] = [];
-let userId = 1;
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
 authRouter.post("/register", async (req: Request, res: Response) => {
