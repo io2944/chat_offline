@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { verifyToken } from "../utils/jwt.js";
-import { JsonWebTokenError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { PublicUser } from "../models/user.model.js";
 
 interface AuthenticatedRequest extends Request {
@@ -16,7 +16,7 @@ export const checkToken = (
   if (!token) return res.status(401).json({ error: "Unauthorized" });
   const jwtResponse = verifyToken(token);
 
-  if (jwtResponse instanceof JsonWebTokenError) {
+  if (jwtResponse instanceof jwt.JsonWebTokenError) {
     return res.status(403).json(jwtResponse);
   }
   req.currentUser = jwtResponse;
