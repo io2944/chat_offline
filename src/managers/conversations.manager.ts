@@ -1,1 +1,1 @@
-export function findAllCurrentUserConversations(): void {}
+export function findAllCurrentUserConversations(currentUserId: number): void {}
