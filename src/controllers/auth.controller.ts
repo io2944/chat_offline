@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createUser, findUserByUsername } from "../managers/users.manager.js";
+import { checkToken } from "../middlewares/check-token.js";
 
 const authRouter = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
@@ -18,7 +19,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   createUser({ username, password: hashedPassword });
 
-  res.status(201).json({ message: "Registered" });
+  return res.status(201).json({ message: "Registered" });
   //todo add token
 });
 
