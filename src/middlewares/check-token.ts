@@ -3,7 +3,7 @@ import { verifyToken } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
 import { PublicUser } from "../models/user.model.js";
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   currentUser?: PublicUser;
 }
 
