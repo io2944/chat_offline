@@ -6,6 +6,7 @@ import { createUser, findUserByUsername } from "../managers/users.manager.js";
 const authRouter = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
+// TODO verify post body
 authRouter.post("/register", async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
