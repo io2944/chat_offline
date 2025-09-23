@@ -4,14 +4,10 @@ import jwt from "jsonwebtoken";
 import { PublicUser } from "../models/user.model.js";
 
 export interface AuthenticatedRequest extends Request {
-  currentUser?: PublicUser;
+  currentUser: PublicUser;
 }
 
-export const checkToken = (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const checkToken = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
   if (!token) return res.status(401).json({ error: "Unauthorized" });
   const jwtResponse = verifyToken(token);
@@ -25,7 +21,7 @@ export const checkToken = (
 
 export const wsAuthMiddleware = (
   ws: WebSocket,
-  req: AuthenticatedRequest,
+  req: Request,
   next: (err?: any) => void
 ) => {
   const token = req.headers.authorization;

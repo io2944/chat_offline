@@ -4,6 +4,7 @@ import authRouter from "./controllers/auth.controller.js";
 import { checkToken } from "./middlewares/check-token.js";
 import cors from "cors";
 import expressWs from "express-ws";
+import conversationRouter from "./controllers/conversation.controller.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/conversation", conversationRouter);
 
 app.get("/protected-route", checkToken, (req: Request, res: Response) => {
   res.send("You accessed a protected route");
