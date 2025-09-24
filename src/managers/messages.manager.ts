@@ -32,7 +32,6 @@ export function createMessage({
     .run(authorId, conversationId, content);
   const messageId = result.lastInsertRowid as number;
 
-  // Fetch the newly created message
   const createdMessage = db
     .prepare(`SELECT * FROM messages WHERE id = ?`)
     .get(messageId) as Message;

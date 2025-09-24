@@ -16,7 +16,7 @@ export function findUserByUsername(username: string): User | undefined {
     .get(username) as User | undefined;
 }
 
-export function findUserById(id: number): User | void {
+export function findUserById(id: number): User | undefined {
   return db
     .prepare(
       `
@@ -31,12 +31,19 @@ export function findUserById(id: number): User | void {
  * create a user
  * @param param0 user with hashed password
  */
-export function createUser({ username, password }: Omit<User, "id">): void {
-  db.prepare(
-    `
+export function createUser({
+  username,
+  password,
+}: Omit<User, "id">): PublicUser | undefined {
+  const result = db
+    .prepare(
+      `
       INSERT INTO users (username, password) VALUES (?, ?)
     `
-  ).run(username, password);
+    )
+    .run(username, password);
+  const userId = result.lastInsertRowid as number;
+  return findUserById(userId);
 }
 
 export function updateUser(user: User): void {

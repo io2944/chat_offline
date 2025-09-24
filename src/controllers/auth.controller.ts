@@ -16,9 +16,12 @@ authRouter.post("/register", async (req: Request, res: Response) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  createUser({ username, password: hashedPassword });
-
-  return res.status(201).json({ message: "Registered" });
+  const user = createUser({ username, password: hashedPassword });
+  if (!user) {
+    return res.status(500);
+  }
+  const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
+  return res.status(201).json({ token: token, currentUser: user });
   //todo add token
 });
 
@@ -32,7 +35,8 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
   const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
-  res.json({ token });
+  const { password: _, ...publicUser } = user;
+  res.json({ token: token, currentUser: publicUser });
 });
 
 export default authRouter;

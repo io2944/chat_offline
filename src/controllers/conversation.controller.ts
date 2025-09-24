@@ -15,11 +15,20 @@ conversationRouter.get(
   (req: Request, res: Response) => {
     const authReq = ensureCurrentUser(req);
     const users = getUncontactedUsersOf(authReq.currentUser.id);
-    res.json(users);
+    res.status(200).json(users);
   }
 );
 
-export default conversationRouter;
+conversationRouter.get(
+  "/my-conversations",
+  checkToken,
+  (req: Request, res: Response) => {
+    const authReq = ensureCurrentUser(req);
+    return res
+      .status(200)
+      .json(findAllUserConversations(authReq.currentUser.id));
+  }
+);
 
 conversationRouter.post("/", checkToken, (req: Request, res: Response) => {
   const { userId } = req.body;
@@ -55,3 +64,5 @@ conversationRouter.post("/", checkToken, (req: Request, res: Response) => {
 
   return res.status(201).json(createConversation([currentUserId, userId]));
 });
+
+export default conversationRouter;

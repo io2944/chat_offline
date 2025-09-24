@@ -6,9 +6,7 @@ import db from "../database.js";
 import { Conversation } from "../models/conversation.model.js";
 import { PublicUser } from "../models/user.model.js";
 
-export function findAllUserConversations(
-  userId: number
-): Conversation[] | undefined {
+export function findAllUserConversations(userId: number): Conversation[] {
   return db
     .prepare(
       `
@@ -19,7 +17,7 @@ export function findAllUserConversations(
     ORDER BY c.created_at DESC
   `
     )
-    .all({ userId }) as Conversation[] | undefined;
+    .all({ userId }) as Conversation[];
 }
 
 export function createConversation(userIds: number[]): Conversation {
