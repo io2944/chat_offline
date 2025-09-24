@@ -1,6 +1,6 @@
 import { PublicUser } from "../models/user.model.js";
 
-export type SocketHeader = "CONNEXION" | "USER_MESSAGE";
+export type SocketType = "CONNEXION" | "USER_MESSAGE";
 
 export interface UserMessagePayload {
   conversationId: number;
@@ -8,8 +8,8 @@ export interface UserMessagePayload {
   message: string;
 }
 
-interface BaseSocketMessage<H extends SocketHeader, P> {
-  header: H;
+interface BaseSocketMessage<T extends SocketType, P> {
+  type: T;
   payload: P;
 }
 

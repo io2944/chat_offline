@@ -4,6 +4,7 @@
 
 import db from "../database.js";
 import { Conversation } from "../models/conversation.model.js";
+import { PublicUser } from "../models/user.model.js";
 
 export function findAllUserConversations(
   userId: number
@@ -70,4 +71,15 @@ export function isUserInConversation(
 
   const result = stmt.get({ conversationId, userId });
   return !!result;
+}
+
+export function getUsersInConversation(conversationId: number): PublicUser[] {
+  const stmt = db.prepare(`
+    SELECT u.id, u.username
+    FROM users u
+    JOIN conversation_has_users cu ON u.id = cu.user_id
+    WHERE cu.conversation_id = @conversationId
+  `);
+
+  return stmt.all({ conversationId }) as PublicUser[];
 }

@@ -22,10 +22,20 @@ export function createMessage({
   authorId,
   conversationId,
   content,
-}: Omit<Message, "id">): void {
-  db.prepare(
-    `
+}: Omit<Message, "id" | "createdAt">): Message {
+  const result = db
+    .prepare(
+      `
       INSERT INTO messages (author_id, conversation_id, content) VALUES (?, ?, ?)
     `
-  ).run(authorId, conversationId, content);
+    )
+    .run(authorId, conversationId, content);
+  const messageId = result.lastInsertRowid as number;
+
+  // Fetch the newly created message
+  const createdMessage = db
+    .prepare(`SELECT * FROM messages WHERE id = ?`)
+    .get(messageId) as Message;
+
+  return createdMessage;
 }
