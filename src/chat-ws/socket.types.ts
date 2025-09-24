@@ -8,17 +8,13 @@ export interface UserMessagePayload {
   message: string;
 }
 
-export interface SocketMessage {
-  header: SocketHeader;
-  payload: any;
+interface BaseSocketMessage<H extends SocketHeader, P> {
+  header: H;
+  payload: P;
 }
 
-export interface ConnexionNotif extends SocketMessage {
-  header: "CONNEXION";
-  payload: PublicUser;
-}
+export type ConnexionNotif = BaseSocketMessage<"CONNEXION", PublicUser>;
+export type UserMessage = BaseSocketMessage<"USER_MESSAGE", UserMessagePayload>;
 
-export interface UserMessage extends SocketMessage {
-  header: "USER_MESSAGE";
-  payload: UserMessagePayload;
-}
+// Union of all socket messages
+export type SocketMessage = ConnexionNotif | UserMessage;

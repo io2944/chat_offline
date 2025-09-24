@@ -22,11 +22,10 @@ export function createMessage({
   authorId,
   conversationId,
   content,
-  createdAt,
 }: Omit<Message, "id">): void {
   db.prepare(
     `
-      INSERT INTO messages (author_id, conversation_id, content, created_at) VALUES (?, ?, ?, ?)
+      INSERT INTO messages (author_id, conversation_id, content) VALUES (?, ?, ?)
     `
-  ).run(authorId, conversationId, content, createdAt);
+  ).run(authorId, conversationId, content);
 }

@@ -1,8 +1,5 @@
 import { Router, Response, Request } from "express";
-import {
-  AuthenticatedRequest,
-  checkToken,
-} from "../middlewares/check-token.js";
+import { checkToken } from "../middlewares/check-token.js";
 import { getUncontactedUsersOf } from "../managers/users.manager.js";
 import { ensureCurrentUser } from "../utils/require-current-user.js";
 

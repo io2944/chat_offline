@@ -24,7 +24,7 @@ const chatHandler = (ws: WebSocket, req: Request) => {
 
     const socketMessage = JSON.parse(msg) as SocketMessage;
 
-    handleWsMessage(socketMessage);
+    handleWsMessage(socketMessage, authRequest.currentUser, userSockets);
   });
 
   ws.on("close", () => {

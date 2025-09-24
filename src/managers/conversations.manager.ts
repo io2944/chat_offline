@@ -36,19 +36,16 @@ export function createConversation(userIds: number[]): Conversation {
   `);
 
   const createTx = db.transaction((ids: number[]) => {
-    // 1. Créer la conversation
     const result = insertConversation.run({
       is_group: isGroup,
       created_at: createdAt,
     });
     const conversationId = result.lastInsertRowid as number;
 
-    // 2. Ajouter les membres
     for (const userId of ids) {
       insertMember.run({ conversation_id: conversationId, user_id: userId });
     }
 
-    // 3. Retourner la conversation créée
     return {
       id: conversationId,
       isGroup,
@@ -57,4 +54,20 @@ export function createConversation(userIds: number[]): Conversation {
   });
 
   return createTx(userIds);
+}
+
+export function isUserInConversation(
+  conversationId: number,
+  userId: number
+): boolean {
+  const stmt = db.prepare(`
+    SELECT 1
+    FROM conversation_has_users
+    WHERE conversation_id = @conversationId
+      AND user_id = @userId
+    LIMIT 1
+  `);
+
+  const result = stmt.get({ conversationId, userId });
+  return !!result;
 }
