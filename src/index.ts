@@ -1,20 +1,38 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import authRouter from "./controllers/auth.controller.js";
+import { checkToken } from "./middlewares/check-token.js";
+import cors from "cors";
+import expressWs from "express-ws";
+import conversationRouter from "./controllers/conversation.controller.js";
+import wsRouter from "./chat-ws/chat.websocket.js";
 
-const app = express();
-const PORT = 3000;
 dotenv.config();
 
-// Middleware
+const app = express();
+expressWs(app);
+
 app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.FRONT_URL,
+    credentials: true,
+  })
+);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Offline Chat Server is running!");
 });
 
 app.use("/auth", authRouter);
+app.use("/conversation", conversationRouter);
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+app.get("/protected-route", checkToken, (req: Request, res: Response) => {
+  res.send("You accessed a protected route");
+});
+
+app.ws("/chat", wsRouter);
+
+app.listen(process.env.PORT, () => {
+  console.log(`🚀 Server running on port ${process.env.PORT}`);
 });

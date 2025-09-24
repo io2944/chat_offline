@@ -3,7 +3,7 @@
  */
 
 import db from "../database.js";
-import { User } from "../models/user.model.js";
+import { PublicUser, User } from "../models/user.model.js";
 
 export function findUserByUsername(username: string): User | undefined {
   return db
@@ -57,4 +57,37 @@ export function deleteUser(id: number): void {
     WHERE id = ?
   `
   ).run(id);
+}
+export function getUncontactedUsersOf(
+  currentUserId: number,
+  withPassword: true
+): User[];
+export function getUncontactedUsersOf(
+  currentUserId: number,
+  withPassword?: false
+): PublicUser[];
+export function getUncontactedUsersOf(
+  currentUserId: number,
+  withPassword: boolean = false
+): User[] | PublicUser[] {
+  const returnedColumns = withPassword ? "*" : "id, username";
+
+  const stmt = db.prepare(`
+    SELECT ${returnedColumns}
+    FROM users u
+    WHERE u.id != @currentUserId
+      AND u.id NOT IN (
+        SELECT cu.user_id
+        FROM conversation_has_users cu
+        JOIN conversations c ON cu.conversation_id = c.id
+        WHERE c.is_group = 0
+          AND cu.conversation_id IN (
+            SELECT conversation_id
+            FROM conversation_has_users
+            WHERE user_id = @currentUserId
+          )
+      )
+  `);
+
+  return stmt.all({ currentUserId: currentUserId }) as User[] | PublicUser[];
 }

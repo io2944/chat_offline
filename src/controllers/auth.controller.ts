@@ -2,7 +2,6 @@ import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createUser, findUserByUsername } from "../managers/users.manager.js";
-import { checkToken } from "../middlewares/check-token.js";
 
 const authRouter = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
