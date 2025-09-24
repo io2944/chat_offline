@@ -5,11 +5,9 @@ import type { WebSocket } from "ws";
 import { handleWsMessage } from "./handle-websocket-message.js";
 import { SocketMessage } from "./socket.types.js";
 
-const wsRouter = Router();
-
 const userSockets = new Map<number, WebSocket>();
 
-const chatHandler = (ws: WebSocket, req: Request) => {
+export const chatHandler = (ws: WebSocket, req: Request) => {
   const authRequest = ensureCurrentUser(req);
   console.log("User connected:", authRequest.currentUser.username);
   userSockets.set(authRequest.currentUser.id, ws);
@@ -32,7 +30,3 @@ const chatHandler = (ws: WebSocket, req: Request) => {
     console.log(`${authRequest.currentUser.username} disconnected`);
   });
 };
-
-wsRouter.ws("/chat", wsCheckToken, chatHandler);
-
-export default wsRouter;

@@ -22,7 +22,6 @@ authRouter.post("/register", async (req: Request, res: Response) => {
   }
   const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
   return res.status(201).json({ token: token, currentUser: user });
-  //todo add token
 });
 
 authRouter.post("/login", async (req: Request, res: Response) => {
@@ -36,7 +35,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
 
   const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
   const { password: _, ...publicUser } = user;
-  res.json({ token: token, currentUser: publicUser });
+  res.status(200).json({ token: token, currentUser: publicUser });
 });
 
 export default authRouter;
