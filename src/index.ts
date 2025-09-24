@@ -5,6 +5,7 @@ import { checkToken } from "./middlewares/check-token.js";
 import cors from "cors";
 import expressWs from "express-ws";
 import conversationRouter from "./controllers/conversation.controller.js";
+import wsRouter from "./chat-ws/chat.websocket.js";
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ app.get("/protected-route", checkToken, (req: Request, res: Response) => {
   res.send("You accessed a protected route");
 });
 
-app.ws("/chat");
+app.ws("/chat", wsRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`🚀 Server running on port ${process.env.PORT}`);

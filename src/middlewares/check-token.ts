@@ -19,7 +19,7 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export const wsAuthMiddleware = (
+export const wsCheckToken = (
   ws: WebSocket,
   req: Request,
   next: (err?: any) => void
