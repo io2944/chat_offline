@@ -6,6 +6,7 @@ import cors from "cors";
 import expressWs from "express-ws";
 import conversationRouter from "./controllers/conversation.controller.js";
 import { chatHandler } from "./chat-ws/chat.websocket.js";
+import { selectAll } from "./managers/users.manager.js";
 
 dotenv.config();
 
@@ -15,13 +16,18 @@ expressWs(app);
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONT_URL,
+    origin: "*",
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Offline Chat Server is running!");
+});
+
+app.get("/print-users", (req: Request, res: Response) => {
+  return res.json(selectAll());
 });
 
 app.use("/auth", authRouter);

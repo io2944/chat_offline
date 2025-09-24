@@ -11,7 +11,7 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
   if (!token) return res.status(401).json({ error: "Unauthorized" });
   const jwtResponse = verifyToken(token);
-
+  console.log(jwtResponse, process.env.JWT_SECRET);
   if (jwtResponse instanceof jwt.JsonWebTokenError) {
     return res.status(403).json(jwtResponse);
   }

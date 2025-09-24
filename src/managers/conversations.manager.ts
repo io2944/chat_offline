@@ -13,7 +13,7 @@ export function findAllUserConversations(userId: number): Conversation[] {
     SELECT c.id, c.is_group, c.created_at
     FROM conversations c
     JOIN conversation_has_users cu ON c.id = cu.conversation_id
-    WHERE cu.user_id = @currentUserId
+    WHERE cu.user_id = @userId
     ORDER BY c.created_at DESC
   `
     )

@@ -5,12 +5,22 @@
 import db from "../database.js";
 import { PublicUser, User } from "../models/user.model.js";
 
+export function selectAll(): User[] {
+  return db
+    .prepare(
+      `
+      SELECT * FROM users
+    `
+    )
+    .all() as User[];
+}
+
 export function findUserByUsername(username: string): User | undefined {
   return db
     .prepare(
       `
       SELECT * FROM users
-      WHERE username = ? COLLATE NOCASE
+      WHERE username = ?
     `
     )
     .get(username) as User | undefined;
