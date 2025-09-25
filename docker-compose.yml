@@ -1,5 +1,6 @@
 services:
   chat:
-    image: chat_offline:latest
-    ports:
-      - "3000:3000"
+      build:
+        context: .
+      ports:
+        - "3000:3000"
