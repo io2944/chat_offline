@@ -4,10 +4,10 @@ import { findAllById, createMessage } from "../managers/messages.manager.js";
 import { checkToken } from "../middlewares/check-token.js";
 import { findAllUserConversations } from "../managers/conversations.manager.js";
 
-const router = express.Router();
+const messageRouter = express.Router();
 
 // POST /messages - créer un message
-router.post("/message", checkToken, (req: Request, res: Response) => {
+messageRouter.post("/message", checkToken, (req: Request, res: Response) => {
   const { authorId, conversationId, content } = req.body;
   const authUser = req.currentUser;
 
@@ -36,10 +36,10 @@ router.post("/message", checkToken, (req: Request, res: Response) => {
 });
 
 // GET /messages/conversation/:id - tous les messages d’une conversation
-router.get("/conversation/:id", (req: Request, res: Response) => {
+messageRouter.get("/conversation/:id", (req: Request, res: Response) => {
   const conversationId = parseInt(req.params.id);
   const messages = findAllById(conversationId);
   res.json(messages);
 });
 
-export default router;
+export default messageRouter;
